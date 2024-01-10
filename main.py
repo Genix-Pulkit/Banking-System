@@ -1,18 +1,19 @@
 import json
 import random
-import  time
-import  sys
+import time
 
 title = """
-================================================================
+===========================================================================
 
-████████ ██   ██ ███████     ██████   █████  ███    ██ ██   ██ 
-   ██    ██   ██ ██          ██   ██ ██   ██ ████   ██ ██  ██  
-   ██    ███████ █████       ██████  ███████ ██ ██  ██ █████   
-   ██    ██   ██ ██          ██   ██ ██   ██ ██  ██ ██ ██  ██  
-   ██    ██   ██ ███████     ██████  ██   ██ ██   ████ ██   ██ 
+
+███████ ██     ██ ██ ███████ ███████     ██████   █████  ███    ██ ██   ██ 
+██      ██     ██ ██ ██      ██          ██   ██ ██   ██ ████   ██ ██  ██  
+███████ ██  █  ██ ██ ███████ ███████     ██████  ███████ ██ ██  ██ █████   
+     ██ ██ ███ ██ ██      ██      ██     ██   ██ ██   ██ ██  ██ ██ ██  ██  
+███████  ███ ███  ██ ███████ ███████     ██████  ██   ██ ██   ████ ██   ██ 
+                                                                           
                                                                
-================================================================
+===========================================================================
 """
 
 
@@ -23,9 +24,11 @@ def load_accounts():
     except FileNotFoundError:
         return {}
 
+
 def save_accounts(accounts):
     with open("accounts.json", "w") as file:
         json.dump(accounts, file, indent=2)
+
 
 def open_account():
     accounts = load_accounts()
@@ -74,11 +77,11 @@ def open_account():
             gender = "Unknown"
 
         status = input("Enter your Status (Minor/Adult) : ")
-        if status.lower() == 'minor':
+        if status.lower() == 'minor' or status.lower() == 'm':
             mother_name = input("Enter your Mother's Name : ")
             father_name = input("Enter your Father's Name : ")
             married_status = None
-        elif status.lower() == 'adult':
+        elif status.lower() == 'adult' or status.lower() == 'a':
             mother_name = None
             father_name = None
             married_status = input("Enter your married status (Married/Unmarried) : ")
@@ -87,7 +90,7 @@ def open_account():
             father_name = None
             married_status = None
 
-        nationality = input("Enter your nationalty : ")
+        nationality = input("Enter your nationality : ")
 
         while True:
             pan_number = input("Enter your Pan number : ")
@@ -129,8 +132,12 @@ def open_account():
 
         email = input("Enter your Email address : ")
 
+        security_ques = input("Enter your security question : ")
+
+        security_ans = input("Enter your security answer : ")
+
         while True:
-            balance = input("How much you want to deposit now : ")
+            balance = input("How much you want to deposit now : ₹")
             try:
                 balance = float(balance)
                 break
@@ -159,21 +166,23 @@ def open_account():
 
             accounts[account_number] = {
                 "Name": name.capitalize(),
-                "PIN" : pin,
-                "Group" : group,
-                "Date of Birth" : date_of_birth,
-                "Gender" : gender,
-                "Status" : status,
-                "Mother's name" : mother_name,
-                "Father's name" : father_name,
-                "Married Status" : married_status,
-                "Nationality" : nationality,
-                "PAN Number" : pan_number,
-                "Aadhar Number" : aadhar_number,
-                "Address" : address,
-                "Pin Code" : pin_code,
-                "Mobile Number" : mobile_number,
-                "Email Address" : email,
+                "PIN": pin,
+                "Group": group.capitalize(),
+                "Date of Birth": date_of_birth,
+                "Gender": gender,
+                "Status": status,
+                "Mother's name": mother_name,
+                "Father's name": father_name,
+                "Married Status": married_status,
+                "Nationality": nationality.capitalize(),
+                "PAN Number": pan_number,
+                "Aadhar Number": aadhar_number,
+                "Address": address,
+                "Pin Code": pin_code,
+                "Mobile Number": mobile_number,
+                "Email Address": email,
+                "Security Question": security_ques,
+                "Security Answer": security_ans,
                 "Balance": balance
             }
             save_accounts(accounts)
@@ -182,11 +191,9 @@ def open_account():
             time.sleep(3)
 
             print(f'''
-    Subject: Your New Account is Open!
+    Dear {name.capitalize()},
     
-    Dear {name},
-    
-    Congratulations! Your account with The Bank has been successfully opened. Here are your essential details:
+    Congratulations! Your account with The Swiss Bank has been successfully opened. Here are your essential details:
     
     Account Number: {account_number}
     4-Digit PIN: {pin}
@@ -197,13 +204,14 @@ def open_account():
     Best regards,
     
     Bank Account Management
-    The Bank
+    The Swiss Bank
     ''')
         else:
             main()
 
     else:
         main()
+
 
 def deposit_money():
     accounts = load_accounts()
@@ -220,10 +228,15 @@ def deposit_money():
                 raise ValueError
         except:
             pass
-        print("Please enter valid input...")
+        print("Please enter correct account number...")
+
+    if account_number.lower() == 'q':
+        main()
+    else:
+        pass
 
     while True:
-        amount = input("Enter the amount to deposit: ")
+        amount = input("Enter the amount to deposit: ₹")
         try:
             amount = float(amount)
             break
@@ -247,12 +260,13 @@ def deposit_money():
         accounts[account_number]["Balance"] += amount
         save_accounts(accounts)
 
-        print(f"Deposited {amount} successfully. New balance: {accounts[account_number]['Balance']}")
+        print(f"Deposited ₹{amount} successfully. New balance: ₹{accounts[account_number]['Balance']}")
 
         main()
     else:
         print("The PIN entered is not correct.")
         main()
+
 
 def withdraw_money():
     accounts = load_accounts()
@@ -269,10 +283,15 @@ def withdraw_money():
                 raise ValueError
         except:
             pass
-        print("Please enter valid input...")
+        print("Please enter correct account number...")
+
+    if account_number.lower() == 'q':
+        main()
+    else:
+        pass
 
     while True:
-        amount = input("Enter the amount to deposit: ")
+        amount = input("Enter the amount to withdraw: ₹")
         try:
             amount = float(amount)
             break
@@ -295,25 +314,60 @@ def withdraw_money():
             time.sleep(2)
             accounts[account_number]["Balance"] -= amount
             save_accounts(accounts)
-            print(f"Withdrew {amount} successfully. New balance: {accounts[account_number]['Balance']}")
+            print(f"Withdrew ₹{amount} successfully. New balance: ₹{accounts[account_number]['Balance']}")
             main()
         else:
             print("Just give us a second...")
             time.sleep(2)
-            print("Sorry but dont have enough funds.")
+            print("I'm sorry, but you can't withdraw that much money since it won't maintain the minimum balance(₹200).")
             main()
     else:
         print("The Pin entered is not correct.")
         main()
 
+
+def check_balance():
+    accounts = load_accounts()
+
+    while True:
+        account_number = input("Enter account number (or q to quit) : ")
+        try:
+            if account_number.lower() == 'q':
+                main()
+                break
+            elif account_number in accounts:
+                break
+            else:
+                raise ValueError
+        except:
+            pass
+        print("Please enter correct account number...")
+
+    while True:
+        check_pin = input("Enter Your PIN : ")
+        try:
+            check_pin = int(check_pin)
+            break
+        except:
+            pass
+        print("Please enter a valid input...")
+
+    if check_pin == accounts[account_number]["PIN"]:
+        print(f"Your Balance is ₹{accounts[account_number]['Balance']}.")
+        main()
+    else:
+        print("The Pin entered is not correct.")
+        main()
+
+
 def fd_enquiry():
     while True:
-        amount = input("Enter the amount : ")
+        amount = input("Enter the amount : ₹")
         try:
             amount = float(amount)
             break
         except:
-           pass
+            pass
         print("Please enter a valid amount.")
     while True:
         time = input("Enter how many years you want to file fixed deposit : ")
@@ -331,18 +385,19 @@ def fd_enquiry():
         except:
             pass
         print("Please enter an integer.")
-    if age >= 60 and age <= 80:
+    if 60 <= age <= 80:
         rate_of_interest = 7.50
     else:
         rate_of_interest = 6.50
 
-    maturity_amnt = (amount * time * rate_of_interest) / 100
+    maturity_amnt = amount + (amount * time * rate_of_interest) / 100
 
-    print(f"Your maturity amount is {maturity_amnt}.")
+    print(f"Your maturity amount is ₹{maturity_amnt}.")
     main()
 
+
 def forgot_details():
-    acconts = load_accounts()
+    accounts = load_accounts()
     name = input("Enter your name : ").lower()
     if ' ' in name:
         name = name.split()[0]
@@ -350,28 +405,33 @@ def forgot_details():
         name = name
     print("Just give us a second...")
     time.sleep(3)
-    for i in acconts:
-        if name in acconts[i]['Name'].lower().split():
-            print(f'''
-        Account Number : {i}
-        Name : {acconts[i]['Name']}
-        PIN : {acconts[i]['PIN']}
-        Group : {acconts[i]['Group']}
-        Date of Birth : {acconts[i]['Date of Birth']}
-        Gender : {acconts[i]['Gender']}
-        Status : {acconts[i]['Status']}
-        Mother's Name : {acconts[i]["Mother's name"]}
-        Father's Name : {acconts[i]["Father's name"]}
-        Married Status : {acconts[i]["Married Status"]}
-        Nationality : {acconts[i]["Nationality"]}
-        PAN Number : {acconts[i]["PAN Number"]}
-        Aadhar Number : {acconts[i]["Aadhar Number"]}
-        Address : {acconts[i]["Address"]}
-        Pin Code : {acconts[i]["Pin Code"]}
-        Mobile Number : {acconts[i]["Mobile Number"]}
-        Email : {acconts[i]["Email Address"]}
-        ''')
-            main()
+    for i in accounts:
+        if name in accounts[i]['Name'].lower().split():
+            user_answer = input(accounts[i]['Security Question'] + ':')
+            if user_answer.lower() == accounts[i]['Security Answer'].lower():
+                print(f'''
+            Account Number : {i}
+            Name : {accounts[i]['Name']}
+            PIN : {accounts[i]['PIN']}
+            Group : {accounts[i]['Group']}
+            Date of Birth : {accounts[i]['Date of Birth']}
+            Gender : {accounts[i]['Gender']}
+            Status : {accounts[i]['Status']}
+            Mother's Name : {accounts[i]["Mother's name"]}
+            Father's Name : {accounts[i]["Father's name"]}
+            Married Status : {accounts[i]["Married Status"]}
+            Nationality : {accounts[i]["Nationality"]}
+            PAN Number : {accounts[i]["PAN Number"]}
+            Aadhar Number : {accounts[i]["Aadhar Number"]}
+            Address : {accounts[i]["Address"]}
+            Pin Code : {accounts[i]["Pin Code"]}
+            Mobile Number : {accounts[i]["Mobile Number"]}
+            Email : {accounts[i]["Email Address"]}
+            ''')
+                main()
+            else:
+                print("Your answer does not match.")
+                main()
         else:
             continue
     print("Your account does not exist.")
@@ -380,15 +440,16 @@ def forgot_details():
 
 def main():
     while True:
-        print("\nWelcme to the bank!")
+        print("\nWelcome to The Swiss Bank!")
         print("[1] Open Account")
         print("[2] Deposit Money")
         print("[3] Withdraw Money")
-        print("[4] Fixed Deposit Enquiry")
-        print("[5] Forgot Details")
-        print("[6] Exit")
+        print("[4] Check Balance")
+        print("[5] Fixed Deposit Enquiry")
+        print("[6] Forgot Details")
+        print("[7] Exit")
 
-        choice = input("Enter your choice (1-6): ")
+        choice = input("Enter your choice (1-7): ")
 
         if choice == "1":
             open_account()
@@ -397,15 +458,17 @@ def main():
         elif choice == "3":
             withdraw_money()
         elif choice == "4":
-            fd_enquiry()
+            check_balance()
         elif choice == "5":
-            forgot_details()
+            fd_enquiry()
         elif choice == "6":
-            print("Exiting program. Thank you!")
-            sys.exit()
+            forgot_details()
+        elif choice == "7":
+            print("\nExiting program. Thank you!")
             break
         else:
-            print("Invalid choice. Please enter a number between 1 and 6.")
+            print("Invalid choice. Please enter a number between 1 and 7.")
+
 
 if __name__ == "__main__":
     print(title)
